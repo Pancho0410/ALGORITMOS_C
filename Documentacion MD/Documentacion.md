@@ -84,7 +84,9 @@ Con este metodo yo puedo tomar los datos por consola de un nuevo usuario y cuand
 ## Limitaciones conocidas del sistema
 
 - Error al importa la libreria `Scanner`
+
     ![libreria sacnner](img/scanner.png)
+    
     Tuve el inconeveniente de que me falto importa la libreri de Scanner
 
 * Error al implementar mi controlador 
