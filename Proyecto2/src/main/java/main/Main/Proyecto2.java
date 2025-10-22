@@ -2,19 +2,23 @@ package main.Main;
 
 import Controladores.ControladorUsuario;
 import Controladores.ControladorLibro;
+import Controladores.ControladorPrestamo;
 import java.util.Scanner;
 
 public class Proyecto2 {
 
     public static ControladorUsuario usuarios = new ControladorUsuario();
     public static ControladorLibro libros = new ControladorLibro();
+    public static ControladorPrestamo prestamos = new ControladorPrestamo();
 
     public static void main(String[] args) {
+        menuPrincipal();
+    }
 
+    public static void menuPrincipal() {
         boolean salir = true;
         Scanner leer = new Scanner(System.in);
         int opcion;
-
         while (salir) {
             System.out.println("--------------------------------------");
             System.out.println("--------------------------------------");
@@ -23,9 +27,11 @@ public class Proyecto2 {
             System.out.println("--------------------------------------");
             System.out.println("1) Gestion de libros");
             System.out.println("2) Gestion de usuarios");
-            System.out.println("6) Salir");
+            System.out.println("3) Prestamos y devoluciones");
+            System.out.println("4) Reportes");
+            System.out.println("5) Salir");
             opcion = leer.nextInt();
-
+            leer.nextLine();
             switch (opcion) {
                 case 1:
                     menuLibro();
@@ -33,7 +39,13 @@ public class Proyecto2 {
                 case 2:
                     menuUsuario();
                     break;
-                case 6:
+                case 3:
+                    menuPrestamos();
+                    break;
+                case 4:
+                    menuReportes();
+                    break;
+                case 5:
                     System.out.println("NOS VEMOS!!!!!!");
                     salir = false;
                     break;
@@ -57,6 +69,7 @@ public class Proyecto2 {
         System.out.println("5) Listar todos los libros");
         System.out.println("6) Salir");
         opcion = leer.nextInt();
+        leer.nextLine();
         switch (opcion) {
             case 1:
                 libros.Registro();
@@ -124,6 +137,71 @@ public class Proyecto2 {
         //menuLibro();
     }
 
+    public static void menuPrestamos() {
+        Scanner leer = new Scanner(System.in);
+        int opcion;
+        System.out.println("--------------------------------------");
+        System.out.println("MENU DE PRESTAMOS Y DEVOLUCIONES");
+        System.out.println("--------------------------------------");
+        System.out.println("1) Prestar libro");
+        System.out.println("2) Devolver libro");
+        System.out.println("3) Gestion de multas");
+        System.out.println("4) Consultar prestamos activos de un usuario");
+        System.out.println("5) Listar todos los prestamos activos");
+        System.out.println("6) Salir");
+        opcion = leer.nextInt();
+        leer.nextLine();
+        switch (opcion) {
+            case 1:
+                prestamos.Prestamo();
+                break;
+            case 2:
+                prestamos.Devolver();
+                break;
+            case 3:
+                GestionMultas();
+                break;
+            case 4:
+                prestamos.PrestamosActivos();
+                break;
+            case 5:
+                prestamos.ListarPrestasmoActivos();
+                break;
+            case 6:
+                return;
+            default:
+                System.out.println("Opcion no valida");
+                break;
+        }
+    }
+
+    public static void GestionMultas() {
+        Scanner leer = new Scanner(System.in);
+        int opcion;
+        System.out.println("--------------------------------------");
+        System.out.println("SUBMENU DE GESTION DE MULTAS");
+        System.out.println("--------------------------------------");
+        System.out.println("1) Historial de multas pagadas por USUARIO");
+        System.out.println("2) Historial de multas pagadas");
+        System.out.println("3) Salir");
+        opcion = leer.nextInt();
+        leer.nextLine();
+        switch (opcion) {
+            case 1:
+                prestamos.ConsultarMultas();  // POR ID DE USUARIO
+                break;
+            case 2:
+                prestamos.MultasPagadas();
+                break;
+            case 3:
+                menuPrestamos();
+                break;
+            default:
+                System.out.println("Opcion no valida");
+                break;
+        }
+    }
+
     public static void menuUsuario() {
         Scanner leer = new Scanner(System.in);
         int opcion;
@@ -151,6 +229,35 @@ public class Proyecto2 {
                 usuarios.Listar();
                 break;
             case 5:
+                return;
+            default:
+                System.out.println("Opcion no valida");
+                break;
+        }
+    }
+    
+    public static void menuReportes(){
+        Scanner leer = new Scanner(System.in);
+        int opcion;
+        System.out.println("--------------------------------------");
+        System.out.println("MENU DE REPORTES");
+        System.out.println("--------------------------------------");
+        System.out.println("1) Reporte de libros mas prestados");
+        System.out.println("2) Reporte de usuarios con prestamos activos");
+        System.out.println("3) Libros en la biblioteca por categoria");
+        System.out.println("4) Salir");
+        opcion = leer.nextInt();
+        leer.nextLine();
+        switch (opcion) {
+            case 1:
+                break;
+            case 2:
+                prestamos.ReportePrestamosActivos();
+                break;
+            case 3:
+                libros.ReportePorCategoria();
+                break;
+            case 4:
                 return;
             default:
                 System.out.println("Opcion no valida");

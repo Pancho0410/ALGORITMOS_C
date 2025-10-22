@@ -1,5 +1,7 @@
 main\Main\Proyecto2.class
-Controladores\ControladorLibro.class
 Modelos\Usuario.class
 Modelos\Libro.class
 Controladores\ControladorUsuario.class
+Controladores\ControladorLibro.class
+Controladores\ControladorPrestamo.class
+Modelos\Prestamo.class

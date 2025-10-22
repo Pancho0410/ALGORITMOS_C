@@ -10,6 +10,7 @@ public class Usuario {
     public int carnet;
     public int telefono;
     public String email;
+    public int prestamos;
 
     public Usuario(int id, String nombre, int carnet, int telefono, String email) {
         this.id = id;
@@ -17,6 +18,7 @@ public class Usuario {
         this.carnet = carnet;
         this.telefono = telefono;
         this.email = email;
+        this.prestamos = 0;
     }
     
     

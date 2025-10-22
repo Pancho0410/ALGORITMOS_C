@@ -107,17 +107,75 @@ public class ControladorLibro {
         l.nextLine();
         for (int i = 0; i < libros.length; i++) {
             if (libros[i] != null) {
-                if(libros[i].codigo == codigo){
-                    libros[i] = null;
-                    eliminado = true;
-                    break;
+                if (libros[i].codigo == codigo) {
+                    if (libros[i].estado.equals("disponible")) {
+                        libros[i] = null;
+                        eliminado = true;
+                        break;
+                    } else {
+                        System.out.println("!!!-- No se puede ELIMINAR el libro actualmente --!!!");
+                        return;
+                    }
                 }
             }
         }
-        if(eliminado){
+        if (eliminado) {
             System.out.println("!!!-- LIBRO ELIMINADO CORRECTAMENTE --!!!");
         } else {
             System.out.println("----------- !!! EL LIBRO NO FUE ENCONTRADO POR LO QUE NO SE ELIMINO NADA !!! -----------");
+        }
+    }
+
+    public boolean VerificarLibro(int codigo) {
+        for (Libro lib : libros) {
+            if (lib != null) {
+                if (lib.codigo == codigo) {
+                    if (lib.estado.equals("disponible")) {
+                        return true;
+                    } else {
+                        System.out.println("!!!-- EL LIBRO indicado no esta DISPONIBLE --!!!");
+                        return false;
+                    }
+                }
+            }
+        }
+        System.out.println("----------- !!! EL LIBRO NO FUE ENCONTRADO !!! -----------");
+        return false;
+    }
+
+    public void CambiarEstado(int codigo, int opcion) {
+        for (int i = 0; i < libros.length; i++) {
+            if (libros[i] != null) {
+                if (libros[i].codigo == codigo) {
+                    if (opcion == 1) {
+                        libros[i].estado = "prestado";
+                    } else {
+                        libros[i].estado = "disponible";
+                    }
+                }
+            }
+        }
+    }
+
+    public String DevolverTitulo(int codigo) {
+        for (int i = 0; i < libros.length; i++) {
+            if (libros[i] != null) {
+                if (libros[i].codigo == codigo) {
+                    return libros[i].titulo;
+                }
+            }
+        }
+        System.out.println("----------- !!! EL LIBRO NO FUE ENCONTRADO !!! -----------");
+        return "";
+    }
+
+    public void ReportePorCategoria() {
+        for (int i = 0; i < libros.length; i++) {
+            if (libros[i] != null) {
+                System.out.println("-------------------------------------");
+                System.out.println("Titulo del libro: " + libros[i].titulo);
+                System.out.println("Categoria: " + libros[i].categoria);
+            }
         }
     }
 

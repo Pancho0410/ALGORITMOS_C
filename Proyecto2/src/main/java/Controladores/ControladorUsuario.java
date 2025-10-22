@@ -45,7 +45,8 @@ public class ControladorUsuario {
                 System.out.println("Nombre: " + usuarios[i].nombre);
                 System.out.println("Carnet: " + usuarios[i].carnet);
                 System.out.println("Telefono: " + usuarios[i].telefono);
-                System.out.println("email: " + usuarios[i].email);
+                System.out.println("Email: " + usuarios[i].email);
+                System.out.println("Libros prestado: " + usuarios[i].prestamos);
             }
         }
     }
@@ -55,13 +56,14 @@ public class ControladorUsuario {
         int id = l.nextInt();
         boolean estado = true;
         for (Usuario u : usuarios) {
-            if (u!= null && u.id == id) {
+            if (u != null && u.id == id) {
                 System.out.println("----------- USUARIO ENCONTRADO -----------");
                 System.out.println("ID: " + u.id);
                 System.out.println("Nombre: " + u.nombre);
                 System.out.println("Carnet: " + u.carnet);
                 System.out.println("Telefono: " + u.telefono);
-                System.out.println("email: " + u.email);
+                System.out.println("Email: " + u.email);
+                System.out.println("Libros prestado: " + u.prestamos);
                 estado = false;
                 break;
             }
@@ -79,7 +81,7 @@ public class ControladorUsuario {
         int indice = -1;
 
         for (int i = 0; i < usuarios.length; i++) {
-            if (usuarios[i]!=null && usuarios[i].id == id) {
+            if (usuarios[i] != null && usuarios[i].id == id) {
                 estado = false;
                 indice = i;
                 break;
@@ -106,6 +108,50 @@ public class ControladorUsuario {
             System.out.println("!!!-- USUARIO MODIFICADO CORRECTAMENTE --!!!");
         }
 
+    }
+
+    public boolean VerificarUsuario(int id) {
+        for (Usuario us : usuarios) {
+            if (us != null) {
+                if (us.id == id) {
+                    if (us.prestamos < 3) {
+                        return true;
+                    } else {
+                        System.out.println("!!!-- EL USUARIO indicado ya tiene 3 prestamos --!!!");
+                        return false;
+                    }
+                }
+            }
+        }
+        System.out.println("----------- !!! EL USUARIO NO FUE ENCONTRADO !!! -----------");
+        return false;
+    }
+
+    public void CambiarPrestamos(int id, int opcion) {
+
+        for (int i = 0; i < usuarios.length; i++) {
+            if (usuarios[i] != null) {
+                if (usuarios[i].id == id) {
+                    if (opcion == 1) {
+                        usuarios[i].prestamos++;
+                    } else {
+                        usuarios[i].prestamos--;
+                    }
+                }
+            }
+        }
+    }
+    
+    public String DevolverNombre(int id) {
+        for (int i = 0; i < usuarios.length; i++) {
+            if (usuarios[i] != null) {
+                if (usuarios[i].id == id) {
+                    return usuarios[i].nombre;
+                }
+            }
+        }
+        System.out.println("----------- !!! EL USUARIO NO FUE ENCONTRADO !!! -----------");
+        return "";
     }
 
 }
