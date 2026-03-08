@@ -2,699 +2,787 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>ERD – Mundiales de Fútbol FIFA</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Album FIFA 2026 — Tablero de Referencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0e14;
-    --surface: #111720;
-    --border: #1e2d40;
-    --accent: #00c2ff;
-    --accent2: #ff6b35;
-    --accent3: #a8ff78;
-    --text: #d4e0ec;
-    --text-dim: #5a7a95;
-    --pk: #ffd166;
-    --fk: #ff6b9d;
-    --attr: #8ecae6;
+    --bg:        #0a0c10;
+    --surface:   #11141a;
+    --border:    #1e2330;
+    --accent:    #00e5ff;
+    --gold:      #ffd94a;
+    --purple:    #b06bff;
+    --text:      #e2e8f0;
+    --muted:     #4a5568;
+    --comun:     #4ade80;
+    --epico:     #818cf8;
+    --leyenda:   #fbbf24;
+    --new-glow:  0 0 12px rgba(0,229,255,0.4);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
   body {
     background: var(--bg);
-    font-family: 'IBM Plex Sans', sans-serif;
     color: var(--text);
+    font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    overflow-x: auto;
+    overflow-x: hidden;
   }
 
-  header {
-    padding: 28px 40px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: linear-gradient(90deg, #0a0e14 0%, #0d1a26 100%);
+  /* ── BACKGROUND GRID ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
   }
-  header .ball { font-size: 2rem; }
-  header h1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.08em;
+
+  .wrapper { position: relative; z-index: 1; padding: 32px 24px 80px; max-width: 1400px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  header { margin-bottom: 36px; }
+  .header-top { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+  .subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 2px;
     text-transform: uppercase;
   }
-  header p {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    letter-spacing: 0.04em;
-  }
-
-  .legend {
-    display: flex;
-    gap: 24px;
-    padding: 14px 40px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    font-family: 'IBM Plex Mono', monospace;
+  .header-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 12px;
   }
-  .legend-item { display: flex; align-items: center; gap: 6px; }
-  .dot { width: 10px; height: 10px; border-radius: 2px; }
+  .header-meta span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-c { background: var(--comun); }
+  .dot-e { background: var(--epico); }
+  .dot-l { background: var(--leyenda); }
 
-  .canvas-wrap {
-    overflow: auto;
-    padding: 40px;
-    min-height: calc(100vh - 120px);
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 28px; align-items: center;
+  }
+  .search-box {
+    flex: 1; min-width: 220px; max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 14px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--accent); box-shadow: var(--new-glow); }
+  .search-box::placeholder { color: var(--muted); }
+
+  .filter-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+  .filter-btn.active-c { border-color: var(--comun); color: var(--comun); background: rgba(74,222,128,0.08); }
+  .filter-btn.active-e { border-color: var(--epico); color: var(--epico); background: rgba(129,140,248,0.08); }
+  .filter-btn.active-l { border-color: var(--leyenda); color: var(--leyenda); background: rgba(251,191,36,0.08); }
+  .filter-btn.active-all { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.08); }
+
+  /* ── SEL TABS ── */
+  .sel-tabs {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .sel-tab {
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .sel-tab:hover { color: var(--text); border-color: var(--muted); }
+  .sel-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 500;
   }
 
-  svg {
-    display: block;
-    margin: 0 auto;
+  /* ── GRID ── */
+  .grid-container { overflow-x: auto; padding-bottom: 8px; }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 3px;
+    min-width: 900px;
+    width: 100%;
   }
 
-  /* Entity tables */
-  .entity { cursor: default; }
-  .entity-header { font-family: 'IBM Plex Mono', monospace; }
-  .entity rect.body { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
-  .entity rect.header-bg { rx: 4; }
-  .entity text.title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    fill: #0a0e14;
+  /* Column headers (pos) */
+  thead th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding: 4px 6px;
+    text-align: center;
+    letter-spacing: 1px;
   }
-  .entity text.attr {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9.5px;
-    fill: var(--attr);
-  }
-  .entity text.pk { fill: var(--pk); font-weight: 600; }
-  .entity text.fk { fill: var(--fk); }
-  .entity text.badge {
-    font-size: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-  }
-  .entity line.row-div { stroke: var(--border); stroke-width: 1; }
+  thead th.pos-label { color: var(--text); font-size: 0.6rem; }
+  thead th.range-c { color: var(--comun); }
+  thead th.range-e { color: var(--epico); }
+  thead th.range-l { color: var(--leyenda); }
 
-  /* Connector lines */
-  .rel { fill: none; stroke-width: 1.5; }
-  .rel-main { stroke: var(--accent); opacity: 0.5; }
-  .rel-sec { stroke: var(--text-dim); opacity: 0.45; stroke-dasharray: 4 3; }
-  .rel-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 8px;
-    fill: var(--text-dim);
+  /* Row headers (sel) */
+  .row-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: var(--text);
+    padding: 0 12px 0 4px;
+    white-space: nowrap;
+    vertical-align: middle;
   }
-  .cardinality {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    font-weight: 700;
+  .row-index {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    padding-right: 8px;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  /* Cells */
+  td.cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    min-width: 82px;
+    width: 82px;
+    height: 52px;
+    vertical-align: top;
+    cursor: pointer;
+    transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+    position: relative;
+    overflow: hidden;
+  }
+  td.cell:hover {
+    transform: scale(1.04);
+    z-index: 10;
+    border-color: var(--accent);
+    box-shadow: var(--new-glow);
+  }
+  td.cell.highlight {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 14px rgba(255,217,74,0.5) !important;
+    animation: pulse 0.6s ease;
+  }
+  td.cell.dim { opacity: 0.18; }
+
+  @keyframes pulse {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  /* Level stripe */
+  td.cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  td.cell.lvl-c::before { background: var(--comun); }
+  td.cell.lvl-e::before { background: var(--epico); }
+  td.cell.lvl-l::before { background: var(--leyenda); box-shadow: 0 0 8px var(--leyenda); }
+
+  .cell-inner {
+    padding: 6px 6px 4px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cell-name {
+    font-size: 0.67rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+  .cell-pos-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .cell-coords {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    opacity: 0.6;
+    text-align: right;
+  }
+
+  /* Range dividers */
+  td.cell.range-start-e { border-left: 2px solid rgba(129,140,248,0.4) !important; }
+  td.cell.range-start-l { border-left: 2px solid rgba(251,191,36,0.5) !important; }
+
+  /* ── TOOLTIP ── */
+  .tooltip {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    background: #1a1f2e;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-width: 200px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6), var(--new-glow);
+    pointer-events: none;
+  }
+  .tooltip.show { display: block; }
+  .tt-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .tt-name.lvl-c { color: var(--comun); }
+  .tt-name.lvl-e { color: var(--epico); }
+  .tt-name.lvl-l { color: var(--leyenda); }
+  .tt-row {
+    display: flex; justify-content: space-between; gap: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .tt-row span:last-child { color: var(--text); }
+  .tt-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .tt-coords {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+  }
+
+  /* ── LEGEND BAR ── */
+  .legend-bar {
+    display: flex; gap: 32px; flex-wrap: wrap;
+    margin-top: 28px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-stripe { width: 24px; height: 3px; border-radius: 2px; }
+
+  /* ── STATS ── */
+  .stats-row {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    flex: 1; min-width: 120px;
+  }
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+  .stat-val.c { color: var(--comun); }
+  .stat-val.e { color: var(--epico); }
+  .stat-val.l { color: var(--leyenda); }
+  .stat-val.t { color: var(--accent); }
+  .stat-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
   }
 </style>
 </head>
 <body>
+<div class="wrapper">
 
-<header>
-  <div class="ball">⚽</div>
-  <div>
-    <h1>Diagrama Entidad–Relación</h1>
-    <p>Base de datos · Mundiales de Fútbol FIFA · Sistemas de Bases de Datos 2 – 2026</p>
+  <header>
+    <div class="header-top">
+      <h1>Album FIFA 2026</h1>
+      <span class="subtitle">Tablero de Referencia</span>
+    </div>
+    <div class="header-meta">
+      <span><span class="dot dot-c"></span> pos 0–9 = Común</span>
+      <span><span class="dot dot-e"></span> pos 10–13 = Épico</span>
+      <span><span class="dot dot-l"></span> pos 14 = Leyenda</span>
+      <span>· sel 0–9 = Selección · 10×15 = 150 figuritas</span>
+    </div>
+  </header>
+
+  <div class="stats-row" id="statsRow"></div>
+
+  <div class="controls">
+    <input class="search-box" id="searchInput" type="text" placeholder="Buscar jugador...">
+    <button class="filter-btn active-all" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="Comun">Común</button>
+    <button class="filter-btn" data-filter="Epico">Épico</button>
+    <button class="filter-btn" data-filter="Leyenda">Leyenda</button>
   </div>
-</header>
 
-<div class="legend">
-  <div class="legend-item"><div class="dot" style="background:#ffd166"></div>PK – Primary Key</div>
-  <div class="legend-item"><div class="dot" style="background:#ff6b9d"></div>FK – Foreign Key</div>
-  <div class="legend-item"><div class="dot" style="background:#8ecae6"></div>Atributo normal</div>
-  <div class="legend-item"><div class="dot" style="background:#00c2ff; opacity:.5"></div>Relación principal</div>
-  <div class="legend-item"><div class="dot" style="background:#5a7a95"></div>Relación secundaria</div>
-  <div class="legend-item" style="margin-left:auto; color:#5a7a95">NN = NOT NULL &nbsp;|&nbsp; UQ = UNIQUE &nbsp;|&nbsp; CK = CHECK</div>
+  <div class="sel-tabs" id="selTabs"></div>
+
+  <div class="grid-container">
+    <table id="albumTable">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="legend-bar">
+    <div class="legend-item"><div class="legend-stripe" style="background:var(--comun)"></div> Común — pos 0 a 9</div>
+    <div class="legend-item"><div class="legend-stripe" style="background:var(--epico)"></div> Épico — pos 10 a 13</div>
+    <div class="legend-item"><div class="legend-stripe" style="background:var(--leyenda); box-shadow:0 0 6px var(--leyenda)"></div> Leyenda — pos 14</div>
+    <div class="legend-item" style="margin-left:auto; color:#4a5568">Hover para ver detalles · Click para fijar</div>
+  </div>
+
 </div>
 
-<div class="canvas-wrap">
-<svg id="erd" width="1460" height="1120" viewBox="0 0 1460 1120">
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#00c2ff" opacity="0.5"/>
-    </marker>
-    <marker id="arrow-sec" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#5a7a95" opacity="0.5"/>
-    </marker>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
-
-  <!-- ═══════════════════════════════════════════
-       RELATIONSHIP LINES (drawn before entities)
-  ════════════════════════════════════════════ -->
-
-  <!-- PAIS → MUNDIAL (sede) -->
-  <path class="rel rel-main" d="M 305,110 Q 305,60 560,60 Q 620,60 620,90" stroke="#00c2ff" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="430" y="52">sede (1:N)</text>
-
-  <!-- MUNDIAL → GRUPO -->
-  <line class="rel rel-main" x1="730" y1="175" x2="730" y2="280" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="735" y="235">1:N</text>
-
-  <!-- GRUPO → PARTICIPACION_GRUPO (pais en grupo) -->
-  <line class="rel rel-main" x1="620" y1="350" x2="480" y2="490" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="515" y="415">1:N</text>
-
-  <!-- PAIS → PARTICIPACION_GRUPO -->
-  <line class="rel rel-main" x1="305" y1="295" x2="380" y2="490" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="310" y="405">1:N</text>
-
-  <!-- GRUPO → PARTIDO -->
-  <line class="rel rel-main" x1="780" y1="360" x2="940" y2="490" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="850" y="415">1:N</text>
-
-  <!-- MUNDIAL → PARTIDO (fase final no tiene grupo) -->
-  <line class="rel rel-sec" x1="780" y1="130" x2="1050" y2="490" marker-end="url(#arrow-sec)" stroke-dasharray="5 3"/>
-  <text class="rel-label" x="970" y="310">1:N</text>
-
-  <!-- PAIS → PARTIDO (local) -->
-  <path class="rel rel-main" d="M 305,240 Q 305,460 860,560" stroke="#00c2ff" fill="none" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="430" y="500">local (1:N)</text>
-
-  <!-- PAIS → PARTIDO (visitante) -->
-  <path class="rel rel-main" d="M 305,255 Q 290,480 840,580" stroke="#ff6b9d" fill="none" stroke-width="1.3" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="330" y="540">visit. (1:N)</text>
-
-  <!-- PARTIDO → GOL -->
-  <line class="rel rel-main" x1="1100" y1="620" x2="1200" y2="720" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="1145" y="665">1:N</text>
-
-  <!-- JUGADOR → GOL -->
-  <line class="rel rel-main" x1="1200" y1="720" x2="1230" y2="720"/>
-  <path class="rel rel-main" d="M 1200,895 Q 1310,895 1310,820" stroke="#00c2ff" fill="none" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="1315" y="810">1:N</text>
-
-  <!-- PAIS → JUGADOR -->
-  <path class="rel rel-sec" d="M 305,310 Q 305,920 1100,930" stroke="#5a7a95" fill="none" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arrow-sec)"/>
-  <text class="rel-label" x="700" y="955">1:N</text>
-
-  <!-- MUNDIAL → PREMIO -->
-  <line class="rel rel-main" x1="780" y1="160" x2="1110" y2="160" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="890" y="152">1:N</text>
-
-  <!-- PAIS → PREMIO -->
-  <path class="rel rel-main" d="M 305,170 Q 305,145 1110,155" stroke="#00c2ff" fill="none" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <!-- MUNDIAL → POSICION_FINAL -->
-  <path class="rel rel-main" d="M 730,180 Q 730,800 860,840" stroke="#00c2ff" fill="none" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text class="rel-label" x="735" y="750">1:N</text>
-
-  <!-- PAIS → POSICION_FINAL -->
-  <path class="rel rel-main" d="M 305,300 Q 305,870 860,870" stroke="#a8ff78" fill="none" stroke-width="1.3" marker-end="url(#arrow)"/>
-
-  <!-- MUNDIAL → GOLEADOR (through jugador) -->
-  <path class="rel rel-sec" d="M 780,165 Q 980,50 1100,880" stroke="#5a7a95" fill="none" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow-sec)"/>
-
-  <!-- JUGADOR → POSICION_FINAL (capitán) OPTIONAL label only -->
-
-
-  <!-- ═══════════════════════════════════════════
-       ENTITIES
-  ════════════════════════════════════════════ -->
-
-  <!-- ────────────────────────────────────────
-       1. PAIS
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(100, 90)">
-    <rect class="body" x="0" y="0" width="205" height="230" rx="4"/>
-    <rect x="0" y="0" width="205" height="28" rx="4" fill="#ff6b35"/>
-    <rect x="0" y="16" width="205" height="12" fill="#ff6b35"/>
-    <text class="title" x="103" y="18" text-anchor="middle">PAIS</text>
-
-    <!-- rows -->
-    <g transform="translate(0, 28)">
-      <!-- PK -->
-      <rect x="0" y="0" width="205" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_pais</text>
-      <text class="badge" x="155" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="205" y2="22"/>
-
-      <rect x="0" y="22" width="205" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="37">nombre</text>
-      <text class="badge" x="130" y="37" fill="#8ecae6">VARCHAR(60) NN UQ</text>
-      <line class="row-div" x1="0" y1="44" x2="205" y2="44"/>
-
-      <rect x="0" y="44" width="205" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="59">codigo_fifa</text>
-      <text class="badge" x="130" y="59" fill="#8ecae6">CHAR(3) UQ</text>
-      <line class="row-div" x1="0" y1="66" x2="205" y2="66"/>
-
-      <rect x="0" y="66" width="205" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">confederacion</text>
-      <text class="badge" x="140" y="81" fill="#8ecae6">VARCHAR(10)</text>
-      <line class="row-div" x1="0" y1="88" x2="205" y2="88"/>
-
-      <rect x="0" y="88" width="205" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">continente</text>
-      <text class="badge" x="130" y="103" fill="#8ecae6">VARCHAR(20)</text>
-      <line class="row-div" x1="0" y1="110" x2="205" y2="110"/>
-
-      <!-- last row rounding -->
-      <rect x="0" y="110" width="205" height="22" rx="0" fill="#111720"/>
-      <text class="attr" x="10" y="125">bandera_url</text>
-      <text class="badge" x="130" y="125" fill="#5a7a95">VARCHAR(200)</text>
-      <line class="row-div" x1="0" y1="132" x2="205" y2="132"/>
-
-      <rect x="0" y="132" width="205" height="70" rx="0" fill="#0d1520"/>
-      <text x="10" y="150" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="163" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK confederacion IN ('UEFA','CONMEBOL',</text>
-      <text x="10" y="174" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">'CONCACAF','CAF','AFC','OFC')</text>
-      <text x="10" y="188" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">IDX: nombre, codigo_fifa</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       2. MUNDIAL
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(560, 90)">
-    <rect class="body" x="0" y="0" width="220" height="215" rx="4"/>
-    <rect x="0" y="0" width="220" height="28" rx="4" fill="#00c2ff"/>
-    <rect x="0" y="16" width="220" height="12" fill="#00c2ff"/>
-    <text class="title" x="110" y="18" text-anchor="middle">MUNDIAL</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="220" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_mundial</text>
-      <text class="badge" x="155" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="220" y2="22"/>
-
-      <rect x="0" y="22" width="220" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="37">anio</text>
-      <text class="badge" x="130" y="37" fill="#8ecae6">SMALLINT NN UQ</text>
-      <line class="row-div" x1="0" y1="44" x2="220" y2="44"/>
-
-      <rect x="0" y="44" width="220" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_pais_sede</text>
-      <text class="badge" x="140" y="59" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="66" x2="220" y2="66"/>
-
-      <rect x="0" y="66" width="220" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">fecha_inicio</text>
-      <text class="badge" x="140" y="81" fill="#8ecae6">DATE NN</text>
-      <line class="row-div" x1="0" y1="88" x2="220" y2="88"/>
-
-      <rect x="0" y="88" width="220" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">fecha_fin</text>
-      <text class="badge" x="140" y="103" fill="#8ecae6">DATE NN</text>
-      <line class="row-div" x1="0" y1="110" x2="220" y2="110"/>
-
-      <rect x="0" y="110" width="220" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">num_equipos</text>
-      <text class="badge" x="145" y="125" fill="#8ecae6">TINYINT NN</text>
-      <line class="row-div" x1="0" y1="132" x2="220" y2="132"/>
-
-      <rect x="0" y="132" width="220" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="147">num_partidos</text>
-      <text class="badge" x="145" y="147" fill="#8ecae6">TINYINT</text>
-      <line class="row-div" x1="0" y1="154" x2="220" y2="154"/>
-
-      <rect x="0" y="154" width="220" height="43" fill="#0d1520"/>
-      <text x="10" y="170" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="181" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK anio &gt;= 1930</text>
-      <text x="10" y="192" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">IDX: anio · FK: id_pais_sede→PAIS</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       3. GRUPO
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(560, 280)">
-    <rect class="body" x="0" y="0" width="220" height="145" rx="4"/>
-    <rect x="0" y="0" width="220" height="28" rx="4" fill="#a8ff78" />
-    <rect x="0" y="16" width="220" height="12" fill="#a8ff78"/>
-    <text class="title" x="110" y="18" text-anchor="middle" fill="#0a0e14">GRUPO</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="220" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_grupo</text>
-      <text class="badge" x="155" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="220" y2="22"/>
-
-      <rect x="0" y="22" width="220" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_mundial</text>
-      <text class="badge" x="140" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="220" y2="44"/>
-
-      <rect x="0" y="44" width="220" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="59">nombre_grupo</text>
-      <text class="badge" x="150" y="59" fill="#8ecae6">CHAR(1) NN</text>
-      <line class="row-div" x1="0" y1="66" x2="220" y2="66"/>
-
-      <rect x="0" y="66" width="220" height="55" fill="#0d1520"/>
-      <text x="10" y="82" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="93" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">UQ(id_mundial, nombre_grupo)</text>
-      <text x="10" y="104" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK nombre_grupo IN ('A'..'H','1'..'6')</text>
-      <text x="10" y="115" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">FK: id_mundial→MUNDIAL</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       4. PARTICIPACION_GRUPO  (pais en grupo)
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(270, 490)">
-    <rect class="body" x="0" y="0" width="230" height="230" rx="4"/>
-    <rect x="0" y="0" width="230" height="28" rx="4" fill="#ffd166"/>
-    <rect x="0" y="16" width="230" height="12" fill="#ffd166"/>
-    <text class="title" x="115" y="18" text-anchor="middle" fill="#0a0e14">PARTICIPACION_GRUPO</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="230" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_participacion</text>
-      <text class="badge" x="158" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="230" y2="22"/>
-
-      <rect x="0" y="22" width="230" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_grupo</text>
-      <text class="badge" x="150" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="230" y2="44"/>
-
-      <rect x="0" y="44" width="230" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_pais</text>
-      <text class="badge" x="150" y="59" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="66" x2="230" y2="66"/>
-
-      <rect x="0" y="66" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">pj</text>
-      <text class="badge" x="150" y="81" fill="#8ecae6">TINYINT DEFAULT 0</text>
-      <line class="row-div" x1="0" y1="88" x2="230" y2="88"/>
-
-      <rect x="0" y="88" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">pg · pe · pp</text>
-      <text class="badge" x="150" y="103" fill="#8ecae6">TINYINT x3</text>
-      <line class="row-div" x1="0" y1="110" x2="230" y2="110"/>
-
-      <rect x="0" y="110" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">gf · gc · dif</text>
-      <text class="badge" x="150" y="125" fill="#8ecae6">SMALLINT x3</text>
-      <line class="row-div" x1="0" y1="132" x2="230" y2="132"/>
-
-      <rect x="0" y="132" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="147">puntos</text>
-      <text class="badge" x="150" y="147" fill="#8ecae6">TINYINT DEFAULT 0</text>
-      <line class="row-div" x1="0" y1="154" x2="230" y2="154"/>
-
-      <rect x="0" y="154" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="169">posicion_grupo</text>
-      <text class="badge" x="162" y="169" fill="#8ecae6">TINYINT</text>
-      <line class="row-div" x1="0" y1="176" x2="230" y2="176"/>
-
-      <rect x="0" y="176" width="230" height="50" fill="#0d1520"/>
-      <text x="10" y="192" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="203" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">UQ(id_grupo, id_pais)</text>
-      <text x="10" y="214" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">FK: id_grupo→GRUPO · id_pais→PAIS</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       5. PARTIDO
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(840, 490)">
-    <rect class="body" x="0" y="0" width="240" height="310" rx="4"/>
-    <rect x="0" y="0" width="240" height="28" rx="4" fill="#00c2ff"/>
-    <rect x="0" y="16" width="240" height="12" fill="#00c2ff"/>
-    <text class="title" x="120" y="18" text-anchor="middle" fill="#0a0e14">PARTIDO</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="240" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_partido</text>
-      <text class="badge" x="160" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="240" y2="22"/>
-
-      <rect x="0" y="22" width="240" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_mundial</text>
-      <text class="badge" x="155" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="240" y2="44"/>
-
-      <rect x="0" y="44" width="240" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_grupo</text>
-      <text class="badge" x="155" y="59" fill="#ff6b9d">INT FK NULL</text>
-      <line class="row-div" x1="0" y1="66" x2="240" y2="66"/>
-
-      <rect x="0" y="66" width="240" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="81">id_pais_local</text>
-      <text class="badge" x="155" y="81" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="88" x2="240" y2="88"/>
-
-      <rect x="0" y="88" width="240" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="103">id_pais_visitante</text>
-      <text class="badge" x="175" y="103" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="110" x2="240" y2="110"/>
-
-      <rect x="0" y="110" width="240" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">fecha</text>
-      <text class="badge" x="155" y="125" fill="#8ecae6">DATE NN</text>
-      <line class="row-div" x1="0" y1="132" x2="240" y2="132"/>
-
-      <rect x="0" y="132" width="240" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="147">estadio</text>
-      <text class="badge" x="155" y="147" fill="#8ecae6">VARCHAR(80)</text>
-      <line class="row-div" x1="0" y1="154" x2="240" y2="154"/>
-
-      <rect x="0" y="154" width="240" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="169">ciudad</text>
-      <text class="badge" x="155" y="169" fill="#8ecae6">VARCHAR(60)</text>
-      <line class="row-div" x1="0" y1="176" x2="240" y2="176"/>
-
-      <rect x="0" y="176" width="240" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="191">goles_local · goles_visit</text>
-      <text class="badge" x="198" y="191" fill="#8ecae6">TI x2</text>
-      <line class="row-div" x1="0" y1="198" x2="240" y2="198"/>
-
-      <rect x="0" y="198" width="240" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="213">penales_local · penales_v</text>
-      <text class="badge" x="200" y="213" fill="#5a7a95">TI NULL x2</text>
-      <line class="row-div" x1="0" y1="220" x2="240" y2="220"/>
-
-      <rect x="0" y="220" width="240" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="235">fase</text>
-      <text class="badge" x="155" y="235" fill="#8ecae6">VARCHAR(20) NN</text>
-      <line class="row-div" x1="0" y1="242" x2="240" y2="242"/>
-
-      <rect x="0" y="242" width="240" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="257">ronda</text>
-      <text class="badge" x="155" y="257" fill="#8ecae6">VARCHAR(30)</text>
-      <line class="row-div" x1="0" y1="264" x2="240" y2="264"/>
-
-      <rect x="0" y="264" width="240" height="46" fill="#0d1520"/>
-      <text x="10" y="278" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="289" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK id_pais_local ≠ id_pais_visitante</text>
-      <text x="10" y="300" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK fase IN ('Grupo','Octavos',...,'Final')</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       6. GOL
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(1110, 720)">
-    <rect class="body" x="0" y="0" width="220" height="195" rx="4"/>
-    <rect x="0" y="0" width="220" height="28" rx="4" fill="#ff6b9d"/>
-    <rect x="0" y="16" width="220" height="12" fill="#ff6b9d"/>
-    <text class="title" x="110" y="18" text-anchor="middle" fill="#0a0e14">GOL</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="220" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_gol</text>
-      <text class="badge" x="155" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="220" y2="22"/>
-
-      <rect x="0" y="22" width="220" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_partido</text>
-      <text class="badge" x="140" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="220" y2="44"/>
-
-      <rect x="0" y="44" width="220" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_jugador</text>
-      <text class="badge" x="140" y="59" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="66" x2="220" y2="66"/>
-
-      <rect x="0" y="66" width="220" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">minuto</text>
-      <text class="badge" x="140" y="81" fill="#8ecae6">TINYINT NN</text>
-      <line class="row-div" x1="0" y1="88" x2="220" y2="88"/>
-
-      <rect x="0" y="88" width="220" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">minuto_extra</text>
-      <text class="badge" x="140" y="103" fill="#8ecae6">TINYINT NULL</text>
-      <line class="row-div" x1="0" y1="110" x2="220" y2="110"/>
-
-      <rect x="0" y="110" width="220" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">tipo</text>
-      <text class="badge" x="140" y="125" fill="#8ecae6">VARCHAR(15)</text>
-      <line class="row-div" x1="0" y1="132" x2="220" y2="132"/>
-
-      <rect x="0" y="132" width="220" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="147">en_contra</text>
-      <text class="badge" x="140" y="147" fill="#8ecae6">BOOL DEFAULT F</text>
-      <line class="row-div" x1="0" y1="154" x2="220" y2="154"/>
-
-      <rect x="0" y="154" width="220" height="40" fill="#0d1520"/>
-      <text x="10" y="168" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="179" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK tipo IN ('Normal','Penal','Cabeza','Falta')</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       7. JUGADOR
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(1100, 870)">
-    <rect class="body" x="0" y="0" width="230" height="195" rx="4"/>
-    <rect x="0" y="0" width="230" height="28" rx="4" fill="#a8ff78"/>
-    <rect x="0" y="16" width="230" height="12" fill="#a8ff78"/>
-    <text class="title" x="115" y="18" text-anchor="middle" fill="#0a0e14">JUGADOR</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="230" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_jugador</text>
-      <text class="badge" x="160" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="230" y2="22"/>
-
-      <rect x="0" y="22" width="230" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_pais</text>
-      <text class="badge" x="160" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="230" y2="44"/>
-
-      <rect x="0" y="44" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="59">nombre</text>
-      <text class="badge" x="160" y="59" fill="#8ecae6">VARCHAR(80) NN</text>
-      <line class="row-div" x1="0" y1="66" x2="230" y2="66"/>
-
-      <rect x="0" y="66" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">fecha_nacimiento</text>
-      <text class="badge" x="160" y="81" fill="#5a7a95">DATE</text>
-      <line class="row-div" x1="0" y1="88" x2="230" y2="88"/>
-
-      <rect x="0" y="88" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">posicion</text>
-      <text class="badge" x="160" y="103" fill="#8ecae6">VARCHAR(15)</text>
-      <line class="row-div" x1="0" y1="110" x2="230" y2="110"/>
-
-      <rect x="0" y="110" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">dorsal</text>
-      <text class="badge" x="160" y="125" fill="#8ecae6">TINYINT</text>
-      <line class="row-div" x1="0" y1="132" x2="230" y2="132"/>
-
-      <rect x="0" y="132" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="147">total_goles_mundial</text>
-      <text class="badge" x="175" y="147" fill="#5a7a95">SMALLINT DEF 0</text>
-      <line class="row-div" x1="0" y1="154" x2="230" y2="154"/>
-
-      <rect x="0" y="154" width="230" height="40" fill="#0d1520"/>
-      <text x="10" y="168" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="179" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">IDX: nombre · FK: id_pais→PAIS</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       8. PREMIO
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(1110, 90)">
-    <rect class="body" x="0" y="0" width="230" height="195" rx="4"/>
-    <rect x="0" y="0" width="230" height="28" rx="4" fill="#ffd166"/>
-    <rect x="0" y="16" width="230" height="12" fill="#ffd166"/>
-    <text class="title" x="115" y="18" text-anchor="middle" fill="#0a0e14">PREMIO</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="230" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_premio</text>
-      <text class="badge" x="160" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="230" y2="22"/>
-
-      <rect x="0" y="22" width="230" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_mundial</text>
-      <text class="badge" x="160" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="230" y2="44"/>
-
-      <rect x="0" y="44" width="230" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_pais</text>
-      <text class="badge" x="160" y="59" fill="#ff6b9d">INT FK NULL</text>
-      <line class="row-div" x1="0" y1="66" x2="230" y2="66"/>
-
-      <rect x="0" y="66" width="230" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="81">id_jugador</text>
-      <text class="badge" x="160" y="81" fill="#ff6b9d">INT FK NULL</text>
-      <line class="row-div" x1="0" y1="88" x2="230" y2="88"/>
-
-      <rect x="0" y="88" width="230" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">tipo_premio</text>
-      <text class="badge" x="160" y="103" fill="#8ecae6">VARCHAR(40) NN</text>
-      <line class="row-div" x1="0" y1="110" x2="230" y2="110"/>
-
-      <rect x="0" y="110" width="230" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">descripcion</text>
-      <text class="badge" x="160" y="125" fill="#5a7a95">VARCHAR(100)</text>
-      <line class="row-div" x1="0" y1="132" x2="230" y2="132"/>
-
-      <rect x="0" y="132" width="230" height="60" fill="#0d1520"/>
-      <text x="10" y="148" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="159" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">CK tipo_premio IN ('Campeon','Subcampeon',</text>
-      <text x="10" y="170" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">'3er Lugar','Balon de Oro','Balon de Plata',</text>
-      <text x="10" y="181" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">'Bota de Oro','Guante de Oro',...)</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       9. POSICION_FINAL
-  ──────────────────────────────────────── -->
-  <g class="entity" transform="translate(860, 830)">
-    <rect class="body" x="0" y="0" width="215" height="185" rx="4"/>
-    <rect x="0" y="0" width="215" height="28" rx="4" fill="#ff6b35"/>
-    <rect x="0" y="16" width="215" height="12" fill="#ff6b35"/>
-    <text class="title" x="108" y="18" text-anchor="middle">POSICION_FINAL</text>
-    <g transform="translate(0,28)">
-      <rect x="0" y="0" width="215" height="22" fill="#1a2535"/>
-      <text class="attr pk" x="10" y="15">id_posicion</text>
-      <text class="badge" x="148" y="15" fill="#ffd166">INT PK NN</text>
-      <line class="row-div" x1="0" y1="22" x2="215" y2="22"/>
-
-      <rect x="0" y="22" width="215" height="22" fill="#111720"/>
-      <text class="attr fk" x="10" y="37">id_mundial</text>
-      <text class="badge" x="148" y="37" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="44" x2="215" y2="44"/>
-
-      <rect x="0" y="44" width="215" height="22" fill="#1a2535"/>
-      <text class="attr fk" x="10" y="59">id_pais</text>
-      <text class="badge" x="148" y="59" fill="#ff6b9d">INT FK NN</text>
-      <line class="row-div" x1="0" y1="66" x2="215" y2="66"/>
-
-      <rect x="0" y="66" width="215" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="81">posicion</text>
-      <text class="badge" x="148" y="81" fill="#8ecae6">TINYINT NN</text>
-      <line class="row-div" x1="0" y1="88" x2="215" y2="88"/>
-
-      <rect x="0" y="88" width="215" height="22" fill="#1a2535"/>
-      <text class="attr" x="10" y="103">goles_total</text>
-      <text class="badge" x="148" y="103" fill="#8ecae6">TINYINT</text>
-      <line class="row-div" x1="0" y1="110" x2="215" y2="110"/>
-
-      <rect x="0" y="110" width="215" height="22" fill="#111720"/>
-      <text class="attr" x="10" y="125">partidos_jugados</text>
-      <text class="badge" x="155" y="125" fill="#8ecae6">TINYINT</text>
-      <line class="row-div" x1="0" y1="132" x2="215" y2="132"/>
-
-      <rect x="0" y="132" width="215" height="50" fill="#0d1520"/>
-      <text x="10" y="148" font-family="IBM Plex Mono" font-size="8" fill="#5a7a95">CONSTRAINTS:</text>
-      <text x="10" y="159" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">UQ(id_mundial, id_pais)</text>
-      <text x="10" y="170" font-family="IBM Plex Mono" font-size="7.5" fill="#5a7a95">FK: id_mundial→MUNDIAL · id_pais→PAIS</text>
-    </g>
-  </g>
-
-  <!-- ────────────────────────────────────────
-       PREMIO → JUGADOR link
-  ──────────────────────────────────────── -->
-  <path class="rel rel-sec" d="M 1225,285 Q 1225,870 1215,870" stroke="#5a7a95" fill="none" stroke-width="1.3" stroke-dasharray="5 3" marker-end="url(#arrow-sec)"/>
-
-  <!-- PARTIDO → POSICION_FINAL annotation -->
-  <path class="rel rel-sec" d="M 960,800 Q 960,830 1075,860" stroke="#5a7a95" fill="none" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arrow-sec)"/>
-
-  <!-- Title watermark -->
-  <text x="730" y="1100" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#1a2a3a" letter-spacing="0.08em">
-    MUNDIALES DE FÚTBOL FIFA — MODELO ENTIDAD RELACIÓN — SBD2 2026
-  </text>
-
-</svg>
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <hr class="tt-divider">
+  <div class="tt-row"><span>Selección</span><span id="tt-sel"></span></div>
+  <div class="tt-row"><span>Posición</span><span id="tt-pos"></span></div>
+  <div class="tt-row"><span>Nivel</span><span id="tt-niv"></span></div>
+  <div class="tt-row"><span>Dorsal</span><span id="tt-dor"></span></div>
+  <div class="tt-row"><span>Altura</span><span id="tt-alt"></span></div>
+  <div class="tt-row"><span>Peso</span><span id="tt-pes"></span></div>
+  <hr class="tt-divider">
+  <div class="tt-coords" id="tt-coords"></div>
 </div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA — 10 selecciones × 15 jugadores
+// ═══════════════════════════════════════════════
+const SELS = ["Argentina","Francia","Brasil","Inglaterra","Alemania","España","Portugal","Holanda","Uruguay","México"];
+
+const catalog = [
+  // sel=0 Argentina
+  [
+    {n:"Emi Martinez",      pos:"Portero",       niv:"Comun",   alt:1.95, pes:88,  dor:23},
+    {n:"Nahuel Molina",     pos:"Defensa",        niv:"Comun",   alt:1.80, pes:75,  dor:26},
+    {n:"L. Martinez",       pos:"Defensa",        niv:"Comun",   alt:1.75, pes:77,  dor:5},
+    {n:"N. Otamendi",       pos:"Defensa",        niv:"Comun",   alt:1.83, pes:81,  dor:19},
+    {n:"Marcos Acuña",      pos:"Defensa",        niv:"Comun",   alt:1.72, pes:72,  dor:8},
+    {n:"R. De Paul",        pos:"Mediocampista",  niv:"Comun",   alt:1.80, pes:79,  dor:7},
+    {n:"L. Paredes",        pos:"Mediocampista",  niv:"Comun",   alt:1.80, pes:77,  dor:5},
+    {n:"Mac Allister",      pos:"Mediocampista",  niv:"Comun",   alt:1.77, pes:75,  dor:20},
+    {n:"T. Almada",         pos:"Mediocampista",  niv:"Comun",   alt:1.73, pes:68,  dor:18},
+    {n:"L. Martinez",       pos:"Delantero",      niv:"Comun",   alt:1.74, pes:72,  dor:22},
+    {n:"Di María",          pos:"Mediocampista",  niv:"Epico",   alt:1.78, pes:75,  dor:11},
+    {n:"J. Alvarez",        pos:"Delantero",      niv:"Epico",   alt:1.70, pes:70,  dor:9},
+    {n:"Dybala",            pos:"Delantero",      niv:"Epico",   alt:1.77, pes:75,  dor:21},
+    {n:"Lo Celso",          pos:"Mediocampista",  niv:"Epico",   alt:1.77, pes:72,  dor:14},
+    {n:"Messi",             pos:"Delantero",      niv:"Leyenda", alt:1.70, pes:72,  dor:10},
+  ],
+  // sel=1 Francia
+  [
+    {n:"Mike Maignan",      pos:"Portero",        niv:"Comun",   alt:1.91, pes:88,  dor:16},
+    {n:"J. Koundé",         pos:"Defensa",        niv:"Comun",   alt:1.78, pes:73,  dor:5},
+    {n:"Upamecano",         pos:"Defensa",        niv:"Comun",   alt:1.86, pes:83,  dor:4},
+    {n:"T. Hernández",      pos:"Defensa",        niv:"Comun",   alt:1.84, pes:84,  dor:22},
+    {n:"W. Saliba",         pos:"Defensa",        niv:"Comun",   alt:1.92, pes:92,  dor:17},
+    {n:"A. Rabiot",         pos:"Mediocampista",  niv:"Comun",   alt:1.88, pes:83,  dor:14},
+    {n:"Camavinga",         pos:"Mediocampista",  niv:"Comun",   alt:1.82, pes:75,  dor:8},
+    {n:"Fofana",            pos:"Mediocampista",  niv:"Comun",   alt:1.86, pes:80,  dor:15},
+    {n:"K. Coman",          pos:"Delantero",      niv:"Comun",   alt:1.80, pes:76,  dor:11},
+    {n:"Kolo Muani",        pos:"Delantero",      niv:"Comun",   alt:1.87, pes:80,  dor:23},
+    {n:"Griezmann",         pos:"Mediocampista",  niv:"Epico",   alt:1.76, pes:73,  dor:7},
+    {n:"Dembélé",           pos:"Delantero",      niv:"Epico",   alt:1.78, pes:68,  dor:10},
+    {n:"M. Thuram",         pos:"Delantero",      niv:"Epico",   alt:1.94, pes:90,  dor:9},
+    {n:"Tchouaméni",        pos:"Mediocampista",  niv:"Epico",   alt:1.88, pes:85,  dor:8},
+    {n:"Mbappé",            pos:"Delantero",      niv:"Leyenda", alt:1.78, pes:75,  dor:10},
+  ],
+  // sel=2 Brasil
+  [
+    {n:"Alisson",           pos:"Portero",        niv:"Comun",   alt:1.91, pes:91,  dor:1},
+    {n:"Danilo",            pos:"Defensa",        niv:"Comun",   alt:1.84, pes:80,  dor:2},
+    {n:"Marquinhos",        pos:"Defensa",        niv:"Comun",   alt:1.83, pes:75,  dor:4},
+    {n:"G. Magalhães",      pos:"Defensa",        niv:"Comun",   alt:1.91, pes:87,  dor:3},
+    {n:"Alex Telles",       pos:"Defensa",        niv:"Comun",   alt:1.81, pes:77,  dor:6},
+    {n:"Casemiro",          pos:"Mediocampista",  niv:"Comun",   alt:1.85, pes:84,  dor:5},
+    {n:"B. Guimarães",      pos:"Mediocampista",  niv:"Comun",   alt:1.83, pes:77,  dor:15},
+    {n:"L. Paquetá",        pos:"Mediocampista",  niv:"Comun",   alt:1.80, pes:75,  dor:10},
+    {n:"Martinelli",        pos:"Delantero",      niv:"Comun",   alt:1.75, pes:75,  dor:11},
+    {n:"Richarlison",       pos:"Delantero",      niv:"Comun",   alt:1.84, pes:80,  dor:9},
+    {n:"Rodrygo",           pos:"Delantero",      niv:"Epico",   alt:1.74, pes:64,  dor:11},
+    {n:"Raphinha",          pos:"Delantero",      niv:"Epico",   alt:1.76, pes:73,  dor:19},
+    {n:"Endrick",           pos:"Delantero",      niv:"Epico",   alt:1.73, pes:76,  dor:9},
+    {n:"Militão",           pos:"Defensa",        niv:"Epico",   alt:1.86, pes:78,  dor:3},
+    {n:"Vinicius Jr",       pos:"Delantero",      niv:"Leyenda", alt:1.76, pes:73,  dor:7},
+  ],
+  // sel=3 Inglaterra
+  [
+    {n:"J. Pickford",       pos:"Portero",        niv:"Comun",   alt:1.85, pes:80,  dor:1},
+    {n:"Reece James",       pos:"Defensa",        niv:"Comun",   alt:1.80, pes:80,  dor:2},
+    {n:"John Stones",       pos:"Defensa",        niv:"Comun",   alt:1.88, pes:70,  dor:5},
+    {n:"Marc Guehi",        pos:"Defensa",        niv:"Comun",   alt:1.82, pes:76,  dor:6},
+    {n:"Luke Shaw",         pos:"Defensa",        niv:"Comun",   alt:1.85, pes:76,  dor:3},
+    {n:"Declan Rice",       pos:"Mediocampista",  niv:"Comun",   alt:1.85, pes:82,  dor:4},
+    {n:"C. Gallagher",      pos:"Mediocampista",  niv:"Comun",   alt:1.82, pes:76,  dor:8},
+    {n:"Alexander-Arnold",  pos:"Mediocampista",  niv:"Comun",   alt:1.80, pes:69,  dor:2},
+    {n:"M. Rashford",       pos:"Delantero",      niv:"Comun",   alt:1.80, pes:70,  dor:11},
+    {n:"O. Watkins",        pos:"Delantero",      niv:"Comun",   alt:1.81, pes:75,  dor:21},
+    {n:"Phil Foden",        pos:"Mediocampista",  niv:"Epico",   alt:1.71, pes:70,  dor:20},
+    {n:"Bukayo Saka",       pos:"Delantero",      niv:"Epico",   alt:1.78, pes:72,  dor:7},
+    {n:"Harry Kane",        pos:"Delantero",      niv:"Epico",   alt:1.88, pes:86,  dor:9},
+    {n:"Cole Palmer",       pos:"Mediocampista",  niv:"Epico",   alt:1.89, pes:80,  dor:22},
+    {n:"Bellingham",        pos:"Mediocampista",  niv:"Leyenda", alt:1.86, pes:83,  dor:10},
+  ],
+  // sel=4 Alemania
+  [
+    {n:"Manuel Neuer",      pos:"Portero",        niv:"Comun",   alt:1.93, pes:92,  dor:1},
+    {n:"J. Kimmich",        pos:"Defensa",        niv:"Comun",   alt:1.76, pes:73,  dor:6},
+    {n:"A. Rüdiger",        pos:"Defensa",        niv:"Comun",   alt:1.90, pes:85,  dor:2},
+    {n:"J. Tah",            pos:"Defensa",        niv:"Comun",   alt:1.95, pes:91,  dor:4},
+    {n:"David Raum",        pos:"Defensa",        niv:"Comun",   alt:1.80, pes:74,  dor:17},
+    {n:"L. Goretzka",       pos:"Mediocampista",  niv:"Comun",   alt:1.89, pes:88,  dor:8},
+    {n:"Gündogan",          pos:"Mediocampista",  niv:"Comun",   alt:1.80, pes:80,  dor:21},
+    {n:"Leroy Sané",        pos:"Delantero",      niv:"Comun",   alt:1.83, pes:75,  dor:19},
+    {n:"Thomas Müller",     pos:"Delantero",      niv:"Comun",   alt:1.86, pes:79,  dor:25},
+    {n:"Kai Havertz",       pos:"Delantero",      niv:"Comun",   alt:1.89, pes:83,  dor:7},
+    {n:"Jamal Musiala",     pos:"Mediocampista",  niv:"Epico",   alt:1.80, pes:70,  dor:14},
+    {n:"S. Gnabry",         pos:"Delantero",      niv:"Epico",   alt:1.75, pes:76,  dor:10},
+    {n:"Schlotterbeck",     pos:"Defensa",        niv:"Epico",   alt:1.91, pes:83,  dor:3},
+    {n:"C. Führich",        pos:"Delantero",      niv:"Epico",   alt:1.76, pes:72,  dor:15},
+    {n:"F. Wirtz",          pos:"Mediocampista",  niv:"Leyenda", alt:1.76, pes:70,  dor:10},
+  ],
+  // sel=5 España
+  [
+    {n:"Unai Simón",        pos:"Portero",        niv:"Comun",   alt:1.92, pes:84,  dor:1},
+    {n:"D. Carvajal",       pos:"Defensa",        niv:"Comun",   alt:1.73, pes:73,  dor:2},
+    {n:"A. Laporte",        pos:"Defensa",        niv:"Comun",   alt:1.86, pes:86,  dor:14},
+    {n:"Le Normand",        pos:"Defensa",        niv:"Comun",   alt:1.87, pes:83,  dor:6},
+    {n:"M. Cucurella",      pos:"Defensa",        niv:"Comun",   alt:1.74, pes:68,  dor:24},
+    {n:"Rodri",             pos:"Mediocampista",  niv:"Comun",   alt:1.91, pes:82,  dor:16},
+    {n:"Fabián Ruiz",       pos:"Mediocampista",  niv:"Comun",   alt:1.89, pes:81,  dor:8},
+    {n:"M. Merino",         pos:"Mediocampista",  niv:"Comun",   alt:1.91, pes:87,  dor:22},
+    {n:"Á. Morata",         pos:"Delantero",      niv:"Comun",   alt:1.87, pes:83,  dor:7},
+    {n:"F. Torres",         pos:"Delantero",      niv:"Comun",   alt:1.84, pes:76,  dor:11},
+    {n:"Lamine Yamal",      pos:"Delantero",      niv:"Epico",   alt:1.80, pes:67,  dor:19},
+    {n:"Nico Williams",     pos:"Delantero",      niv:"Epico",   alt:1.80, pes:72,  dor:17},
+    {n:"Dani Olmo",         pos:"Mediocampista",  niv:"Epico",   alt:1.79, pes:74,  dor:10},
+    {n:"Gavi",              pos:"Mediocampista",  niv:"Epico",   alt:1.73, pes:60,  dor:9},
+    {n:"Pedri",             pos:"Mediocampista",  niv:"Leyenda", alt:1.74, pes:63,  dor:26},
+  ],
+  // sel=6 Portugal
+  [
+    {n:"Diogo Costa",       pos:"Portero",        niv:"Comun",   alt:1.90, pes:84,  dor:1},
+    {n:"J. Cancelo",        pos:"Defensa",        niv:"Comun",   alt:1.82, pes:74,  dor:20},
+    {n:"Rúben Dias",        pos:"Defensa",        niv:"Comun",   alt:1.87, pes:76,  dor:4},
+    {n:"Pepe",              pos:"Defensa",        niv:"Comun",   alt:1.88, pes:87,  dor:3},
+    {n:"Nuno Mendes",       pos:"Defensa",        niv:"Comun",   alt:1.80, pes:68,  dor:19},
+    {n:"J. Palhinha",       pos:"Mediocampista",  niv:"Comun",   alt:1.87, pes:84,  dor:26},
+    {n:"Vitinha",           pos:"Mediocampista",  niv:"Comun",   alt:1.72, pes:65,  dor:16},
+    {n:"W. Carvalho",       pos:"Mediocampista",  niv:"Comun",   alt:1.87, pes:81,  dor:14},
+    {n:"Pedro Neto",        pos:"Delantero",      niv:"Comun",   alt:1.74, pes:67,  dor:7},
+    {n:"G. Ramos",          pos:"Delantero",      niv:"Comun",   alt:1.88, pes:84,  dor:9},
+    {n:"B. Silva",          pos:"Mediocampista",  niv:"Epico",   alt:1.73, pes:64,  dor:10},
+    {n:"Rafael Leão",       pos:"Delantero",      niv:"Epico",   alt:1.88, pes:79,  dor:11},
+    {n:"João Félix",        pos:"Delantero",      niv:"Epico",   alt:1.81, pes:70,  dor:11},
+    {n:"Rúben Neves",       pos:"Mediocampista",  niv:"Epico",   alt:1.81, pes:74,  dor:8},
+    {n:"C. Ronaldo",        pos:"Delantero",      niv:"Leyenda", alt:1.87, pes:85,  dor:7},
+  ],
+  // sel=7 Holanda
+  [
+    {n:"Verbruggen",        pos:"Portero",        niv:"Comun",   alt:1.97, pes:90,  dor:1},
+    {n:"Dumfries",          pos:"Defensa",        niv:"Comun",   alt:1.88, pes:85,  dor:22},
+    {n:"S. de Vrij",        pos:"Defensa",        niv:"Comun",   alt:1.89, pes:85,  dor:6},
+    {n:"De Ligt",           pos:"Defensa",        niv:"Comun",   alt:1.89, pes:86,  dor:4},
+    {n:"Nathan Aké",        pos:"Defensa",        niv:"Comun",   alt:1.80, pes:75,  dor:5},
+    {n:"T. Reijnders",      pos:"Mediocampista",  niv:"Comun",   alt:1.84, pes:74,  dor:14},
+    {n:"Koopmeiners",       pos:"Mediocampista",  niv:"Comun",   alt:1.83, pes:75,  dor:8},
+    {n:"D. Klaassen",       pos:"Mediocampista",  niv:"Comun",   alt:1.82, pes:76,  dor:18},
+    {n:"Cody Gakpo",        pos:"Delantero",      niv:"Comun",   alt:1.89, pes:80,  dor:11},
+    {n:"W. Weghorst",       pos:"Delantero",      niv:"Comun",   alt:1.97, pes:92,  dor:19},
+    {n:"Xavi Simons",       pos:"Mediocampista",  niv:"Epico",   alt:1.76, pes:68,  dor:7},
+    {n:"Memphis Depay",     pos:"Delantero",      niv:"Epico",   alt:1.76, pes:78,  dor:10},
+    {n:"D. Malen",          pos:"Delantero",      niv:"Epico",   alt:1.76, pes:72,  dor:9},
+    {n:"Gravenberch",       pos:"Mediocampista",  niv:"Epico",   alt:1.90, pes:83,  dor:20},
+    {n:"Virgil van Dijk",   pos:"Defensa",        niv:"Leyenda", alt:1.93, pes:92,  dor:4},
+  ],
+  // sel=8 Uruguay
+  [
+    {n:"S. Rochet",         pos:"Portero",        niv:"Comun",   alt:1.90, pes:84,  dor:1},
+    {n:"N. Nández",         pos:"Defensa",        niv:"Comun",   alt:1.80, pes:78,  dor:3},
+    {n:"J.M. Giménez",      pos:"Defensa",        niv:"Comun",   alt:1.87, pes:81,  dor:2},
+    {n:"R. Araujo",         pos:"Defensa",        niv:"Comun",   alt:1.88, pes:83,  dor:4},
+    {n:"M. Olivera",        pos:"Defensa",        niv:"Comun",   alt:1.80, pes:74,  dor:12},
+    {n:"R. Bentancur",      pos:"Mediocampista",  niv:"Comun",   alt:1.87, pes:78,  dor:8},
+    {n:"M. Ugarte",         pos:"Mediocampista",  niv:"Comun",   alt:1.82, pes:76,  dor:5},
+    {n:"De La Cruz",        pos:"Mediocampista",  niv:"Comun",   alt:1.73, pes:68,  dor:10},
+    {n:"F. Pellistri",      pos:"Delantero",      niv:"Comun",   alt:1.73, pes:70,  dor:18},
+    {n:"Luis Suárez",       pos:"Delantero",      niv:"Comun",   alt:1.82, pes:86,  dor:9},
+    {n:"F. Valverde",       pos:"Mediocampista",  niv:"Epico",   alt:1.82, pes:77,  dor:15},
+    {n:"M. Vecino",         pos:"Mediocampista",  niv:"Epico",   alt:1.88, pes:80,  dor:17},
+    {n:"E. Cavani",         pos:"Delantero",      niv:"Epico",   alt:1.84, pes:79,  dor:21},
+    {n:"De Arrascaeta",     pos:"Mediocampista",  niv:"Epico",   alt:1.78, pes:72,  dor:7},
+    {n:"Darwin Núñez",      pos:"Delantero",      niv:"Leyenda", alt:1.87, pes:81,  dor:11},
+  ],
+  // sel=9 México
+  [
+    {n:"G. Ochoa",          pos:"Portero",        niv:"Comun",   alt:1.83, pes:80,  dor:13},
+    {n:"J. Sánchez",        pos:"Defensa",        niv:"Comun",   alt:1.74, pes:73,  dor:22},
+    {n:"C. Montes",         pos:"Defensa",        niv:"Comun",   alt:1.89, pes:85,  dor:3},
+    {n:"J. Vásquez",        pos:"Defensa",        niv:"Comun",   alt:1.84, pes:80,  dor:4},
+    {n:"J. Gallardo",       pos:"Defensa",        niv:"Comun",   alt:1.73, pes:70,  dor:23},
+    {n:"E. Álvarez",        pos:"Mediocampista",  niv:"Comun",   alt:1.87, pes:82,  dor:18},
+    {n:"E. Gutiérrez",      pos:"Mediocampista",  niv:"Comun",   alt:1.76, pes:72,  dor:8},
+    {n:"C. Rodríguez",      pos:"Mediocampista",  niv:"Comun",   alt:1.79, pes:75,  dor:7},
+    {n:"Alexis Vega",       pos:"Delantero",      niv:"Comun",   alt:1.68, pes:68,  dor:10},
+    {n:"R. Jiménez",        pos:"Delantero",      niv:"Comun",   alt:1.88, pes:83,  dor:9},
+    {n:"H. Herrera",        pos:"Mediocampista",  niv:"Epico",   alt:1.77, pes:75,  dor:16},
+    {n:"H. Lozano",         pos:"Delantero",      niv:"Epico",   alt:1.74, pes:70,  dor:22},
+    {n:"U. Antuna",         pos:"Delantero",      niv:"Epico",   alt:1.75, pes:73,  dor:19},
+    {n:"R. Alvarado",       pos:"Mediocampista",  niv:"Epico",   alt:1.70, pes:70,  dor:14},
+    {n:"Hirving Lozano",    pos:"Delantero",      niv:"Leyenda", alt:1.74, pes:70,  dor:22},
+  ],
+];
+
+// ═══════════════════════════════════════════════
+// BUILD UI
+// ═══════════════════════════════════════════════
+let activeFilter = 'all';
+let activeSel = 'all';
+let pinnedCell = null;
+
+// Stats
+function buildStats() {
+  const row = document.getElementById('statsRow');
+  let total = 0, comun = 0, epico = 0, leyenda = 0;
+  catalog.forEach(sel => sel.forEach(j => {
+    total++;
+    if (j.niv === 'Comun') comun++;
+    else if (j.niv === 'Epico') epico++;
+    else leyenda++;
+  }));
+  row.innerHTML = `
+    <div class="stat-card"><div class="stat-val t">${total}</div><div class="stat-lbl">Total figuritas</div></div>
+    <div class="stat-card"><div class="stat-val c">${comun}</div><div class="stat-lbl">Común</div></div>
+    <div class="stat-card"><div class="stat-val e">${epico}</div><div class="stat-lbl">Épico</div></div>
+    <div class="stat-card"><div class="stat-val l">${leyenda}</div><div class="stat-lbl">Leyenda</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--text)">${SELS.length}</div><div class="stat-lbl">Selecciones</div></div>
+  `;
+}
+
+// Sel tabs
+function buildTabs() {
+  const tabs = document.getElementById('selTabs');
+  let html = `<button class="sel-tab active" data-sel="all">Todas</button>`;
+  SELS.forEach((s, i) => {
+    html += `<button class="sel-tab" data-sel="${i}">${s}</button>`;
+  });
+  tabs.innerHTML = html;
+  tabs.querySelectorAll('.sel-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeSel = btn.dataset.sel === 'all' ? 'all' : parseInt(btn.dataset.sel);
+      tabs.querySelectorAll('.sel-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    });
+  });
+}
+
+// Table header
+function buildHeader() {
+  const head = document.getElementById('tableHead');
+  let html = '<tr><th></th><th></th>';
+  for (let p = 0; p < 15; p++) {
+    const cls = p < 10 ? 'range-c' : p < 14 ? 'range-e' : 'range-l';
+    html += `<th class="pos-label ${cls}">pos ${p}</th>`;
+  }
+  html += '</tr>';
+  // Range labels
+  html += '<tr><th></th><th></th>';
+  html += `<th colspan="10" style="color:var(--comun);font-family:'DM Mono',monospace;font-size:0.6rem;text-align:left;padding-left:4px">── COMÚN (0–9) ──</th>`;
+  html += `<th colspan="4" style="color:var(--epico);font-family:'DM Mono',monospace;font-size:0.6rem;text-align:left">── ÉPICO (10–13) ──</th>`;
+  html += `<th style="color:var(--leyenda);font-family:'DM Mono',monospace;font-size:0.6rem">L</th>`;
+  html += '</tr>';
+  head.innerHTML = html;
+}
+
+// Render table
+function renderTable() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const tbody = document.getElementById('tableBody');
+  let html = '';
+
+  catalog.forEach((selData, si) => {
+    if (activeSel !== 'all' && activeSel !== si) return;
+
+    html += `<tr>
+      <td class="row-index">${si}</td>
+      <td class="row-header">${SELS[si]}</td>`;
+
+    selData.forEach((j, pi) => {
+      const lvlCls = j.niv === 'Comun' ? 'lvl-c' : j.niv === 'Epico' ? 'lvl-e' : 'lvl-l';
+      const rangeStart = pi === 10 ? 'range-start-e' : pi === 14 ? 'range-start-l' : '';
+
+      const matchesFilter = activeFilter === 'all' || j.niv === activeFilter;
+      const matchesSearch = !query || j.n.toLowerCase().includes(query) ||
+                            SELS[si].toLowerCase().includes(query) ||
+                            j.pos.toLowerCase().includes(query);
+      const dimCls = (!matchesFilter || !matchesSearch) ? 'dim' : '';
+
+      html += `<td class="cell ${lvlCls} ${rangeStart} ${dimCls}"
+                  data-si="${si}" data-pi="${pi}"
+                  data-name="${j.n}" data-sel="${SELS[si]}"
+                  data-pos="${j.pos}" data-niv="${j.niv}"
+                  data-alt="${j.alt}" data-pes="${j.pes}" data-dor="${j.dor}">
+        <div class="cell-inner">
+          <div>
+            <div class="cell-name">${j.n}</div>
+            <div class="cell-pos-tag">${j.pos.substring(0,3).toUpperCase()}</div>
+          </div>
+          <div class="cell-coords">[${si},${pi}]</div>
+        </div>
+      </td>`;
+    });
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+  attachCellEvents();
+}
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+function showTooltip(cell, x, y) {
+  document.getElementById('tt-name').textContent = cell.dataset.name;
+  document.getElementById('tt-name').className = `tt-name lvl-${cell.dataset.niv === 'Comun' ? 'c' : cell.dataset.niv === 'Epico' ? 'e' : 'l'}`;
+  document.getElementById('tt-sel').textContent = cell.dataset.sel;
+  document.getElementById('tt-pos').textContent = cell.dataset.pos;
+  document.getElementById('tt-niv').textContent = cell.dataset.niv;
+  document.getElementById('tt-dor').textContent = '#' + cell.dataset.dor;
+  document.getElementById('tt-alt').textContent = cell.dataset.alt + ' m';
+  document.getElementById('tt-pes').textContent = cell.dataset.pes + ' kg';
+  document.getElementById('tt-coords').textContent =
+    `album[${cell.dataset.si}, ${cell.dataset.pi}]  ·  indiceArte = ${parseInt(cell.dataset.si)*15 + parseInt(cell.dataset.pi)}`;
+
+  const tw = tooltip.offsetWidth || 220;
+  const th = tooltip.offsetHeight || 200;
+  let left = x + 14;
+  let top  = y - 10;
+  if (left + tw > window.innerWidth - 10) left = x - tw - 14;
+  if (top  + th > window.innerHeight - 10) top = window.innerHeight - th - 10;
+  tooltip.style.left = left + 'px';
+  tooltip.style.top  = top  + 'px';
+  tooltip.classList.add('show');
+}
+
+function attachCellEvents() {
+  document.querySelectorAll('td.cell').forEach(cell => {
+    cell.addEventListener('mouseenter', e => {
+      if (!pinnedCell) showTooltip(cell, e.clientX, e.clientY);
+    });
+    cell.addEventListener('mousemove', e => {
+      if (!pinnedCell) showTooltip(cell, e.clientX, e.clientY);
+    });
+    cell.addEventListener('mouseleave', () => {
+      if (!pinnedCell) tooltip.classList.remove('show');
+    });
+    cell.addEventListener('click', e => {
+      e.stopPropagation();
+      if (pinnedCell === cell) {
+        pinnedCell = null;
+        cell.classList.remove('highlight');
+        tooltip.classList.remove('show');
+      } else {
+        if (pinnedCell) pinnedCell.classList.remove('highlight');
+        pinnedCell = cell;
+        cell.classList.add('highlight');
+        showTooltip(cell, e.clientX, e.clientY);
+      }
+    });
+  });
+}
+
+document.addEventListener('click', () => {
+  if (pinnedCell) {
+    pinnedCell.classList.remove('highlight');
+    pinnedCell = null;
+    tooltip.classList.remove('show');
+  }
+});
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.className = 'filter-btn';
+    });
+    const cls = activeFilter === 'all' ? 'active-all' :
+                activeFilter === 'Comun' ? 'active-c' :
+                activeFilter === 'Epico' ? 'active-e' : 'active-l';
+    btn.classList.add(cls);
+    renderTable();
+  });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', renderTable);
+
+// Init
+buildStats();
+buildTabs();
+buildHeader();
+renderTable();
+</script>
 </body>
 </html>
